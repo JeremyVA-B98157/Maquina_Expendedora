@@ -11,7 +11,6 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<PersonDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IPersonRepository, PersonRepository>();
             return services;
         }

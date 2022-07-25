@@ -1,6 +1,7 @@
 ﻿using Domain.Persons.Repositories;
 using Domain.Persons.Entities;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Application.Persons.Implementations
 {
@@ -13,9 +14,9 @@ namespace Application.Persons.Implementations
             _personRepository = personRepository;
         }
 
-        public async Task CreatePersonAsync(Person personInfo)
+        public IList<Person> CrearInventario()
         {
-            await _personRepository.CreatePersonAsync(personInfo);
+            return _personRepository.CrearInventario();
         }
     }
 }

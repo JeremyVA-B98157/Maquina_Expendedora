@@ -1,24 +1,15 @@
-﻿using Infrastructure.Persons.EntityMappings;
-using Domain.Persons.Entities;
-using Infrastructure.Core;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Domain.Persons.Entities;
+using System.Collections.Generic;
 
 namespace Infrastructure.Persons
 {
-    internal class PersonDbContext : ApplicationDbContext
+    internal class PersonDbContext
     {
-        public PersonDbContext(DbContextOptions<PersonDbContext> options,
-                               ILogger<PersonDbContext> logger) : base(options, logger)
+        public PersonDbContext()
         {
         }
 
-        public DbSet<Person> Persons { get; set; } = null!;
+        public IList<Person> Persons { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new PersonMap());
-        }
     }
 }

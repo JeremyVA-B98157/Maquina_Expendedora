@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Domain.Persons.Entities;
 
 namespace Domain.Persons.Repositories
 {
     public interface IPersonRepository
     {
-        Task CreatePersonAsync(Person personInfo);
+        IList<Person> CrearInventario();
     }
 }

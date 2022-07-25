@@ -10,26 +10,18 @@ namespace Domain.Persons.DTOs
 {
     public class PersonsDTO
     {
-        public String Email { get; set; }
-        public String Name { get; set; }
-        public String LastName1 { get; set; }
-        public String LastName2 { get; set; }
-        public int Ssn { get; }
-        public String BankAccount { get; set; }
-        public String Adress { get; set; }
-        public String PhoneNumber { get; set; }
+        public int CantidadDisponible { get; set; }
+        public String Nombre { get; set; }
+        public double Precio { get; set; }
+        public int CantidadSolicitada { get; set; }
 
-        public PersonsDTO(String email, String name, String lastName1, String lastName2, int id,
-                            String bankAccount, String adress, String phoneNumber)
+        public PersonsDTO(int cantidadDisponible, String nombre,
+            double precio, int cantidadSolicitada)
         {
-            Email = email;
-            Name = name;
-            LastName1 = lastName1;
-            LastName2 = lastName2;
-            Ssn = id;
-            BankAccount = bankAccount;
-            Adress = adress;
-            PhoneNumber = phoneNumber;
+            CantidadDisponible = cantidadDisponible;
+            Nombre = nombre;
+            Precio = precio;
+            CantidadSolicitada = cantidadSolicitada;
         }
     }
 }

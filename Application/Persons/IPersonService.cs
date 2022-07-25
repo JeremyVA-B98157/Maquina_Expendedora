@@ -1,10 +1,11 @@
 ﻿using Domain.Persons.Entities;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Application.Persons
 {
     public interface IPersonService
     {
-        Task CreatePersonAsync(Person personInfo);
+        IList<Person> CrearInventario();
     }
 }

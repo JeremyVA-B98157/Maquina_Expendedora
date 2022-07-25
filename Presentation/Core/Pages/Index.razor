@@ -1,3 +1,38 @@
 ﻿@page "/"
+@using Domain.Persons.Entities
+@using Application.Persons
+@inject IPersonService PersonService
 
-Hello World
+<MudTable @ref="@_mudTable" Items="@_refrescos" Hover="true" Breakpoint="Breakpoint.Sm">
+	 <ToolBarContent>
+        <MudText Color="Color.Secondary">Refrescos disponibles</MudText>
+        <MudSpacer />
+    </ToolBarContent> 
+    <HeaderContent>
+        <MudTh>Cantidad Disponible</MudTh>
+        <MudTh>Nombre del refresco</MudTh>
+        <MudTh>Precio por unidad</MudTh>
+        <MudTh>Unidades seleccionadas</MudTh>
+    </HeaderContent>
+        
+    <RowTemplate>
+        <MudTd DataLabel="Cantidad Disponible">@context.CantidadDispobile</MudTd>
+        <MudTd DataLabel="Nombre del refresco">@context.Nombre</MudTd>
+        <MudTd DataLabel="Precio por unidad">₡ @context.Precio</MudTd>
+        <MudTd DataLabel="Unidades seleccionadas">
+            <MudNumericField @bind-Value="context.CantidadSolicitada" Label="Cantidad" Variant="Variant.Text"  Min="0" Max="@context.CantidadDispobile" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code{
+	private MudTable<Person> _mudTable;
+	private IList<Person> _refrescos;
+	private bool _cargando = true;
+
+	protected override async Task OnInitializedAsync()
+	{
+		_refrescos = PersonService.CrearInventario();
+		_cargando = false;
+	}
+}
