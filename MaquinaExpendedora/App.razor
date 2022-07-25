@@ -1,0 +1,47 @@
+﻿<Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true"
+        AdditionalAssemblies="@(new [] { typeof(MainLayout).Assembly })">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+<MudThemeProvider Theme="MyCustomTheme" />
+@code{
+    private static string Blue = "#7289da";
+    private static string White = "#FFFFFF";
+    private static string Gray = "#99aab5";
+
+
+    MudTheme MyCustomTheme = new MudTheme()
+        {
+            Palette = new Palette()
+            {
+                Primary = White,
+                Secondary = Blue,
+                AppbarBackground = White,
+                AppbarText = White,
+                DrawerBackground = Blue,
+                DrawerText = White,
+                DrawerIcon = Blue,
+                TextDisabled = White,
+                Tertiary = Gray
+
+        },
+        Typography = new Typography()
+        {
+            H6 = new H6()
+            {
+                FontFamily = new[] { "Roboto", "Helvetica", "Arial", "sans-serif" },
+                FontSize = "1.25rem",
+                FontWeight = 500,
+                LineHeight = 1.6,
+                LetterSpacing = ".0075em"
+            }
+        }
+    };
+}
