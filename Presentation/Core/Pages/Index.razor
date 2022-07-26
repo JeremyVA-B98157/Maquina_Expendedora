@@ -63,7 +63,7 @@
         </MudTable>
     </DialogContent>
     <DialogActions>
-            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="ActualizarDisponibles" Class="px-10">Aceptar</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="VerificarCompra" Class="px-10">Aceptar</MudButton>
             <MudButton Variant="Variant.Filled" Color="Color.Transparent" OnClick="CloseDialog" Class="px-10">Cancelar</MudButton>
     </DialogActions>
 </MudDialog>
@@ -105,11 +105,59 @@
         return RefrescoService.ObtenerPrecioTotal(_refrescos);
     }
 
-    private void ActualizarDisponibles()
+    private double ObtenerCambioMaquina()
+    {
+        return DineroService.ObtenerMontoLista(_cambioMaquina);
+    }
+
+    private double ObtenerDineroIngresado()
+    {
+        return DineroService.ObtenerMontoLista(_dineroCliente);
+    }
+
+    private bool ValidarCambioDisponible()
+    {
+        if (ObtenerCambioMaquina() >= (ObtenerDineroIngresado()-ObtenerMontoTotal()))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private bool ValidarCantidadIngresada()
+    {
+        if (ObtenerDineroIngresado() >= ObtenerMontoTotal())
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void VerificarCompra()
+    {
+        if (ValidarCambioDisponible())
+        {
+            if (ValidarCantidadIngresada())
+            {
+                ActualizarMaquina();
+                CloseDialog();
+            }
+            else
+            {
+                Snackbar.Add("Monto insuficiente para pagar", Severity.Warning);
+            }
+        }
+        else
+        {
+            Snackbar.Add("Máquina fuera de servicio", Severity.Error);
+            CloseDialog();
+        }
+    }
+
+    private void ActualizarMaquina()
     {
         _refrescos = RefrescoService.ActualizarInventario(_refrescos);
         _cambioMaquina = DineroService.ActualizarDinero(_dineroCliente);
         _dineroCliente = DineroService.CrearListaCliente();
-        CloseDialog();
     }
 }

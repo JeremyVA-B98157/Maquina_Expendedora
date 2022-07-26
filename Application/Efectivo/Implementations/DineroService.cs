@@ -28,5 +28,10 @@ namespace Application.Efectivo.Implementations
         {
             return _dineroRepository.ActualizarDinero(cambio);
         }
+
+        public double ObtenerMontoLista(IList<Dinero> dinero)
+        {
+            return _dineroRepository.ObtenerMontoLista(dinero);
+        }
     }
 }

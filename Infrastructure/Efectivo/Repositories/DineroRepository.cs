@@ -53,5 +53,15 @@ namespace Infrastructure.Efectivo.Repositories
             }
             return _dbContext.Cambio;
         }
+
+        public double ObtenerMontoLista(IList<Dinero> dinero)
+        {
+            double monto = 0;
+            foreach (Dinero moneda in dinero)
+            {
+                monto += moneda.Denominacion * moneda.Cantidad;
+            }
+            return monto;
+        }
     }
 }
