@@ -118,17 +118,7 @@
     } 
 
     void CloseDialogVuelto() => _visibleVuelto = false;
-    private void OpenDialogVuelto()
-    {
-        if (ObtenerMontoTotal() > 0)
-        {
-            _visible = true;
-        }
-        else
-        {
-            Snackbar.Add("Por favor seleccione los refrescos que desea comprar", Severity.Warning);
-        }
-    } 
+    private void OpenDialogVuelto() => _visibleVuelto = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -179,7 +169,7 @@
             if (ValidarCantidadIngresada())
             {
                 ActualizarMaquina();
-                CloseDialog();
+
             }
             else
             {
@@ -211,10 +201,13 @@
             _refrescos = RefrescoService.ActualizarInventario(_refrescos);
             _cambioMaquina = DineroService.ActualizarDinero(_dineroCliente);
             _dineroCliente = DineroService.CrearListaCliente();
+            CloseDialog();
+            OpenDialogVuelto();
         }
         else
         {
             Snackbar.Add("Fallo al realizar la compra", Severity.Error);
+            CloseDialog();
         }
     }
 }
