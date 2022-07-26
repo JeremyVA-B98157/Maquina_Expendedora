@@ -4,14 +4,11 @@
 <MudSnackbarProvider />
 <MudLayout id="banner">
     <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Secondary" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudText Color="Color.Secondary">Máquina Expendedora</MudText>
         <MudSpacer />
         <MudSpacer />
-
     </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen" Elevation="2">
-        <NavMenu />
-    </MudDrawer>
+
     <MudMainContent>
         <div style="padding: 2%;" class="container">
             @Body

@@ -1,3 +1,65 @@
 ﻿@page "/"
+@using Domain.Refrescos.Entities
+@using Application.Refrescos
+@inject IRefrescoService RefrescoService
 
-Hello World
+<MudTable @ref="@_mudTable" Items="@_refrescos" Hover="true" Breakpoint="Breakpoint.Sm">
+	 <ToolBarContent>
+        <MudText>Refrescos disponibles</MudText>
+        <MudSpacer />
+    </ToolBarContent> 
+    <HeaderContent>
+        <MudTh>Cantidad Disponible</MudTh>
+        <MudTh>Nombre del refresco</MudTh>
+        <MudTh>Precio por unidad</MudTh>
+        <MudTh>Unidades seleccionadas</MudTh>
+    </HeaderContent>
+        
+    <RowTemplate>
+        <MudTd DataLabel="Cantidad Disponible">@context.CantidadDisponible</MudTd>
+        <MudTd DataLabel="Nombre del refresco">@context.Nombre</MudTd>
+        <MudTd DataLabel="Precio por unidad">₡ @context.Precio</MudTd>
+        <MudTd DataLabel="Unidades seleccionadas">
+            <MudNumericField @bind-Value="context.CantidadSolicitada" Variant="Variant.Text" Min="0" Max="@context.CantidadDisponible"/>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+<br>
+<MudGrid>
+    <MudItem xs="4">
+        <MudButton Variant="Variant.Filled" OnClick=ActualizarDisponibles Color="Color.Secondary">
+            <MudText>Pagar</MudText>
+        </MudButton>
+    </MudItem>
+    <MudItem xs="4"></MudItem>
+    <MudItem xs="3">
+        <MudText Inline="true">Monto total: ₡ @ObtenerMontoTotal()</MudText>
+    </MudItem>
+</MudGrid>
+
+@code{
+    private MudTable<Refresco> _mudTable;
+    private IList<Refresco> _refrescos;
+    private bool _cargando = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _refrescos = RefrescoService.CrearInventario();
+        _cargando = false;
+    }
+
+    private double ObtenerMontoTotal()
+    {
+        double monto = 0;
+        foreach (Refresco refresco in _refrescos.Where(e => e.CantidadSolicitada > 0))
+        {
+            monto += refresco.Precio * Convert.ToDouble(refresco.CantidadSolicitada);
+        }
+        return monto;
+    }
+
+    private void ActualizarDisponibles()
+    {
+        _refrescos = RefrescoService.ActualizarInventario(_refrescos);
+    }
+}
