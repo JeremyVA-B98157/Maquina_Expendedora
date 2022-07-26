@@ -5,7 +5,7 @@
 
 <MudTable @ref="@_mudTable" Items="@_refrescos" Hover="true" Breakpoint="Breakpoint.Sm">
 	 <ToolBarContent>
-        <MudText Color="Color.Secondary">Refrescos disponibles</MudText>
+        <MudText>Refrescos disponibles</MudText>
         <MudSpacer />
     </ToolBarContent> 
     <HeaderContent>
@@ -24,15 +24,37 @@
         </MudTd>
     </RowTemplate>
 </MudTable>
+<br>
+<MudGrid>
+    <MudItem xs="4">
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary">
+            <MudText>Pagar</MudText>
+        </MudButton>
+    </MudItem>
+    <MudItem xs="4"></MudItem>
+    <MudItem xs="3">
+        <MudText Inline="true">Monto total: ₡ @ObtenerMontoTotal()</MudText>
+    </MudItem>
+</MudGrid>
 
 @code{
-	private MudTable<Refresco> _mudTable;
-	private IList<Refresco> _refrescos;
-	private bool _cargando = true;
+    private MudTable<Refresco> _mudTable;
+    private IList<Refresco> _refrescos;
+    private bool _cargando = true;
 
-	protected override async Task OnInitializedAsync()
-	{
-		_refrescos = RefrescoService.CrearInventario();
-		_cargando = false;
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        _refrescos = RefrescoService.CrearInventario();
+        _cargando = false;
+    }
+
+    private double ObtenerMontoTotal()
+    {
+        double monto = 0;
+        foreach (Refresco refresco in _refrescos.Where(e => e.CantidadSolicitada > 0))
+        {
+            monto += refresco.Precio * Convert.ToDouble(refresco.CantidadSolicitada);
+        }
+        return monto;
+    }
 }
