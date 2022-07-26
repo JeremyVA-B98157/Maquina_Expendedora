@@ -7,5 +7,6 @@ namespace Domain.Refrescos.Repositories
     {
         IList<Refresco> CrearInventario();
         IList<Refresco> ActualizarInventario(IList<Refresco> refrescos);
+        double ObtenerPrecioTotal(IList<Refresco> refrescos);
     }
 }

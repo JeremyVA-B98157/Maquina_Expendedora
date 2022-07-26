@@ -23,5 +23,10 @@ namespace Application.Refrescos.Implementations
         {
             return _refrescoRepository.ActualizarInventario(refrescos);
         }
+
+        public double ObtenerPrecioTotal(IList<Refresco> refrescos)
+        {
+            return _refrescoRepository.ObtenerPrecioTotal(refrescos);
+        }
     }
 }

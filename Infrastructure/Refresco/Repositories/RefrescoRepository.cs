@@ -1,6 +1,7 @@
 ﻿using Domain.Refrescos.Entities;
 using Domain.Refrescos.Repositories;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Infrastructure.Refrescos.Repositories
@@ -27,13 +28,23 @@ namespace Infrastructure.Refrescos.Repositories
 
         public IList<Refresco> ActualizarInventario(IList<Refresco> refrescos)
         {
-            foreach (Refresco refresco in refrescos)
+            foreach (Refresco refresco in refrescos.Where(e => e.CantidadSolicitada > 0))
             {
                 refresco.CantidadDisponible -= Convert.ToInt32(refresco.CantidadSolicitada);
                 refresco.CantidadSolicitada = 0;
             }
             _dbContext.Refrescos = refrescos;
             return _dbContext.Refrescos;
+        }
+
+        public double ObtenerPrecioTotal(IList<Refresco> refrescos)
+        {
+            double monto = 0;
+            foreach (Refresco refresco in refrescos.Where(e => e.CantidadSolicitada > 0))
+            {
+                monto += refresco.Precio * Convert.ToDouble(refresco.CantidadSolicitada);
+            }
+            return monto;
         }
     }
 }

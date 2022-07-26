@@ -1,7 +1,12 @@
 ﻿@page "/"
 @using Domain.Refrescos.Entities
+@using Domain.Efectivo.Entities
 @using Application.Refrescos
+@using Application.Efectivo
+@using Presentation.Core.Components
+@inject IDineroService DineroService
 @inject IRefrescoService RefrescoService
+@inject ISnackbar Snackbar
 
 <MudTable @ref="@_mudTable" Items="@_refrescos" Hover="true" Breakpoint="Breakpoint.Sm">
 	 <ToolBarContent>
@@ -27,7 +32,7 @@
 <br>
 <MudGrid>
     <MudItem xs="4">
-        <MudButton Variant="Variant.Filled" OnClick=ActualizarDisponibles Color="Color.Secondary">
+        <MudButton Variant="Variant.Filled" OnClick=OpenDialog Color="Color.Secondary">
             <MudText>Pagar</MudText>
         </MudButton>
     </MudItem>
@@ -37,29 +42,122 @@
     </MudItem>
 </MudGrid>
 
+<MudDialog @bind-IsVisible="_visible" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Filled.AttachMoney" Color="@Color.Secondary" Class="mr-2"/>Ingrese la cantidad de dinero con la que va a pagar</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTable @ref="@_mudTableDialog" Items="@_dineroCliente" Hover="true" Breakpoint="Breakpoint.Sm">
+            <HeaderContent>
+                <MudTh>Monto</MudTh>
+                <MudTh>Cantidad</MudTh>
+            </HeaderContent>
+        
+            <RowTemplate>
+                <MudTd DataLabel="Monto">₡ @context.Denominacion</MudTd>
+                <MudTd DataLabel="Cantidad">
+                    <MudNumericField @bind-Value="context.Cantidad" Variant="Variant.Text" Min="0"/>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </DialogContent>
+    <DialogActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="VerificarCompra" Class="px-10">Aceptar</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Transparent" OnClick="CloseDialog" Class="px-10">Cancelar</MudButton>
+    </DialogActions>
+</MudDialog>
+
 @code{
     private MudTable<Refresco> _mudTable;
+    private MudTable<Dinero> _mudTableDialog;
     private IList<Refresco> _refrescos;
+    private IList<Dinero> _dineroCliente;
+    private IList<Dinero> _cambioMaquina;
     private bool _cargando = true;
+    private bool _visible;
+
+    void CloseDialog() => _visible = false;
+    private DialogOptions dialogOptions = new() { FullWidth = true };
+    private void OpenDialog()
+    {
+        if (ObtenerMontoTotal() > 0)
+        {
+            _visible = true;
+        }
+        else
+        {
+            Snackbar.Add("Por favor seleccione los refrescos que desea comprar", Severity.Warning);
+        }
+    } 
+
 
     protected override async Task OnInitializedAsync()
     {
         _refrescos = RefrescoService.CrearInventario();
+        _cambioMaquina = DineroService.CrearFondo();
+        _dineroCliente = DineroService.CrearListaCliente();
         _cargando = false;
     }
 
     private double ObtenerMontoTotal()
     {
-        double monto = 0;
-        foreach (Refresco refresco in _refrescos.Where(e => e.CantidadSolicitada > 0))
-        {
-            monto += refresco.Precio * Convert.ToDouble(refresco.CantidadSolicitada);
-        }
-        return monto;
+        return RefrescoService.ObtenerPrecioTotal(_refrescos);
     }
 
-    private void ActualizarDisponibles()
+    private double ObtenerCambioMaquina()
+    {
+        return DineroService.ObtenerMontoLista(_cambioMaquina);
+    }
+
+    private double ObtenerDineroIngresado()
+    {
+        return DineroService.ObtenerMontoLista(_dineroCliente);
+    }
+
+    private bool ValidarCambioDisponible()
+    {
+        if (ObtenerCambioMaquina() >= (ObtenerDineroIngresado()-ObtenerMontoTotal()))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private bool ValidarCantidadIngresada()
+    {
+        if (ObtenerDineroIngresado() >= ObtenerMontoTotal())
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void VerificarCompra()
+    {
+        if (ValidarCambioDisponible())
+        {
+            if (ValidarCantidadIngresada())
+            {
+                ActualizarMaquina();
+                CloseDialog();
+            }
+            else
+            {
+                Snackbar.Add("Monto insuficiente para pagar", Severity.Warning);
+            }
+        }
+        else
+        {
+            Snackbar.Add("Máquina fuera de servicio", Severity.Error);
+            CloseDialog();
+        }
+    }
+
+    private void ActualizarMaquina()
     {
         _refrescos = RefrescoService.ActualizarInventario(_refrescos);
+        _cambioMaquina = DineroService.ActualizarDinero(_dineroCliente);
+        _dineroCliente = DineroService.CrearListaCliente();
     }
 }
