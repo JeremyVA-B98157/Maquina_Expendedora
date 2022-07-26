@@ -10,5 +10,6 @@ namespace Domain.Efectivo.Repositories
         IList<Dinero> ActualizarDinero(IList<Dinero> cambio);
         double ObtenerMontoLista(IList<Dinero> dinero);
         IList<Dinero> ObtenerVuelto(double vuelto);
+        IList<Dinero> PagarVuelto(IList<Dinero> dineroVuelto);
     }
 }
