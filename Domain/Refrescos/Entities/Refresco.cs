@@ -4,7 +4,7 @@ namespace Domain.Refrescos.Entities
 {
     public class Refresco
     {
-        public int CantidadDispobile { get; set; }
+        public int CantidadDisponible { get; set; }
         public String Nombre { get; set; }
         public double Precio { get; set; }
         public int? CantidadSolicitada { get; set; }
@@ -12,7 +12,7 @@ namespace Domain.Refrescos.Entities
         public Refresco(int cantidadDisponible, String nombre,
             double precio, int cantidadSolicitada)
         {
-            CantidadDispobile = cantidadDisponible;
+            CantidadDisponible = cantidadDisponible;
             Nombre = nombre;
             Precio = precio;
             CantidadSolicitada = cantidadSolicitada;

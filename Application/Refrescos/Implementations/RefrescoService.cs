@@ -18,5 +18,10 @@ namespace Application.Refrescos.Implementations
         {
             return _refrescoRepository.CrearInventario();
         }
+
+        public IList<Refresco> ActualizarInventario(IList<Refresco> refrescos)
+        {
+            return _refrescoRepository.ActualizarInventario(refrescos);
+        }
     }
 }

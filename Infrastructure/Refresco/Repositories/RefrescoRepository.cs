@@ -1,10 +1,7 @@
-﻿using Domain.Core.Repositories;
-using Domain.Refrescos.Entities;
+﻿using Domain.Refrescos.Entities;
 using Domain.Refrescos.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Refrescos.Repositories
 {
@@ -25,6 +22,17 @@ namespace Infrastructure.Refrescos.Repositories
                 new Refresco(10, "Fanta", 550.0, 0),
                 new Refresco(15, "Sprite", 725.0, 0),
             };
+            return _dbContext.Refrescos;
+        }
+
+        public IList<Refresco> ActualizarInventario(IList<Refresco> refrescos)
+        {
+            foreach (Refresco refresco in refrescos)
+            {
+                refresco.CantidadDisponible -= Convert.ToInt32(refresco.CantidadSolicitada);
+                refresco.CantidadSolicitada = 0;
+            }
+            _dbContext.Refrescos = refrescos;
             return _dbContext.Refrescos;
         }
     }

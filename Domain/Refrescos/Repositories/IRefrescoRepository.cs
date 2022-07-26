@@ -6,5 +6,6 @@ namespace Domain.Refrescos.Repositories
     public interface IRefrescoRepository
     {
         IList<Refresco> CrearInventario();
+        IList<Refresco> ActualizarInventario(IList<Refresco> refrescos);
     }
 }
