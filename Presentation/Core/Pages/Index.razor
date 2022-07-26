@@ -1,7 +1,7 @@
 ﻿@page "/"
-@using Domain.Persons.Entities
-@using Application.Persons
-@inject IPersonService PersonService
+@using Domain.Refrescos.Entities
+@using Application.Refrescos
+@inject IRefrescoService RefrescoService
 
 <MudTable @ref="@_mudTable" Items="@_refrescos" Hover="true" Breakpoint="Breakpoint.Sm">
 	 <ToolBarContent>
@@ -20,19 +20,19 @@
         <MudTd DataLabel="Nombre del refresco">@context.Nombre</MudTd>
         <MudTd DataLabel="Precio por unidad">₡ @context.Precio</MudTd>
         <MudTd DataLabel="Unidades seleccionadas">
-            <MudNumericField @bind-Value="context.CantidadSolicitada" Label="Cantidad" Variant="Variant.Text"  Min="0" Max="@context.CantidadDispobile" />
+            <MudNumericField @bind-Value="context.CantidadSolicitada" Variant="Variant.Text"  Min="0" Max="@context.CantidadDispobile" />
         </MudTd>
     </RowTemplate>
 </MudTable>
 
 @code{
-	private MudTable<Person> _mudTable;
-	private IList<Person> _refrescos;
+	private MudTable<Refresco> _mudTable;
+	private IList<Refresco> _refrescos;
 	private bool _cargando = true;
 
 	protected override async Task OnInitializedAsync()
 	{
-		_refrescos = PersonService.CrearInventario();
+		_refrescos = RefrescoService.CrearInventario();
 		_cargando = false;
 	}
 }

@@ -1,21 +1,16 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 
-namespace Domain.Persons.DTOs
+namespace Domain.Refrescos.DTOs
 {
-    public class PersonsDTO
+    public class RefrescosDTO
     {
         public int CantidadDisponible { get; set; }
         public String Nombre { get; set; }
         public double Precio { get; set; }
         public int CantidadSolicitada { get; set; }
 
-        public PersonsDTO(int cantidadDisponible, String nombre,
+        public RefrescosDTO(int cantidadDisponible, String nombre,
             double precio, int cantidadSolicitada)
         {
             CantidadDisponible = cantidadDisponible;

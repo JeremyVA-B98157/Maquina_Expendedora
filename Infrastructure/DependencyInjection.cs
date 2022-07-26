@@ -1,7 +1,5 @@
-﻿using Infrastructure.Persons;
-using Infrastructure.Persons.Repositories;
-using Domain.Persons.Repositories;
-using Microsoft.EntityFrameworkCore;
+﻿using Infrastructure.Refrescos.Repositories;
+using Domain.Refrescos.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 
@@ -11,7 +9,7 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, string connectionString)
         {
-            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IRefrescoRepository, RefrescoRepository>();
             return services;
         }
     }

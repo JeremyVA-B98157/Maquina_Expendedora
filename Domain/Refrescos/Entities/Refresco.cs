@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace Domain.Persons.Entities
+namespace Domain.Refrescos.Entities
 {
-    public class Person
+    public class Refresco
     {
         public int CantidadDispobile { get; set; }
         public String Nombre { get; set; }
         public double Precio { get; set; }
         public int CantidadSolicitada { get; set; }
 
-        public Person(int cantidadDisponible, String nombre,
+        public Refresco(int cantidadDisponible, String nombre,
             double precio, int cantidadSolicitada)
         {
             CantidadDispobile = cantidadDisponible;
