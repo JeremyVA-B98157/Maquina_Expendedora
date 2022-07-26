@@ -19,6 +19,11 @@ namespace Application.Efectivo.Implementations
             return _dineroRepository.CrearFondo();
         }
 
+        public IList<Dinero> CrearListaCliente()
+        { 
+            return _dineroRepository.CrearListaCliente();
+        }
+
         public IList<Dinero> ActualizarDinero(IList<Dinero> cambio)
         {
             return _dineroRepository.ActualizarDinero(cambio);

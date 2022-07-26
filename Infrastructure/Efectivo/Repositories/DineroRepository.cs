@@ -1,6 +1,7 @@
 ﻿using Domain.Efectivo.Entities;
 using Domain.Efectivo.Repositories;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Infrastructure.Efectivo.Repositories
@@ -25,14 +26,31 @@ namespace Infrastructure.Efectivo.Repositories
             return _dbContext.Cambio;
         }
 
-        public IList<Dinero> ActualizarDinero(IList<Dinero> refrescos)
+        public IList<Dinero> CrearListaCliente()
         {
-            //foreach (Dinero refresco in refrescos)
-            //{
-            //    refresco.CantidadDisponible -= Convert.ToInt32(refresco.CantidadSolicitada);
-            //    refresco.CantidadSolicitada = 0;
-            //}
-            //_dbContext.Refrescos = refrescos;
+            IList<Dinero> dineroCliente = new List<Dinero>() {
+                new Dinero(1000.0, 0),
+                new Dinero(500.0, 0),
+                new Dinero(100.0, 0),
+                new Dinero(50.0, 0),
+                new Dinero(25.0, 0),
+            };
+            return dineroCliente;
+        }
+
+        public IList<Dinero> ActualizarDinero(IList<Dinero> dineroCliente)
+        {
+            foreach (Dinero dinero in dineroCliente)
+            {
+                if (dinero.Cantidad > 0)
+                {
+                    if (dinero.Denominacion != 1000.0)
+                    {
+                        _dbContext.Cambio.Where(e => e.Denominacion == dinero.Denominacion).FirstOrDefault().Cantidad += dinero.Cantidad;
+                    }
+                }
+
+            }
             return _dbContext.Cambio;
         }
     }

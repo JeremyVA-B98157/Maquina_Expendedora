@@ -7,6 +7,7 @@ namespace Application.Efectivo
     public interface IDineroService
     {
         IList<Dinero> CrearFondo();
+        IList<Dinero> CrearListaCliente();
         IList<Dinero> ActualizarDinero(IList<Dinero> cambio);
     }
 }
