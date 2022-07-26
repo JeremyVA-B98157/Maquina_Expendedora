@@ -104,5 +104,62 @@ namespace Tests
             mockDineroRepository.Verify(repo => repo.ObtenerMontoLista(cambioMaquina));
             dineroEntrante.Should().Be(16125.0);
         }
+
+        [Fact]
+        public void ObtenerVuelto()
+        {
+            double vuelto = 275.0;
+
+            IList<Dinero> vueltoLista = new List<Dinero>() {
+                new Dinero(500.0, 0),
+                new Dinero(100.0, 2),
+                new Dinero(50.0, 1),
+                new Dinero(25.0, 1),
+            };
+            //arrange
+            var mockDineroRepository = new Mock<IDineroRepository>();
+            var dineroService = new DineroService(mockDineroRepository.Object);
+            mockDineroRepository.Setup(repo => repo.ObtenerVuelto(vuelto)).Returns(vueltoLista);
+
+            //act
+            var nuevoCambioMaquina = dineroService.ObtenerVuelto(vuelto);
+
+            //assert
+            mockDineroRepository.Verify(repo => repo.ObtenerVuelto(vuelto));
+            nuevoCambioMaquina.Where(e => e.Denominacion == 500.0).First().Cantidad.Should().Be(0);
+            nuevoCambioMaquina.Where(e => e.Denominacion == 100.0).First().Cantidad.Should().Be(2);
+            nuevoCambioMaquina.Where(e => e.Denominacion == 50.0).First().Cantidad.Should().Be(1);
+            nuevoCambioMaquina.Where(e => e.Denominacion == 25.0).First().Cantidad.Should().Be(1);
+        }
+
+        [Fact]
+        public void PagarVuelto()
+        {
+            IList<Dinero> dineroEntrante = new List<Dinero>() {
+                new Dinero(1000.0, 0),
+                new Dinero(500.0, 3),
+                new Dinero(100.0, 0),
+                new Dinero(50.0, 0),
+                new Dinero(25.0, 0),
+            };
+
+            IList<Dinero> cambioMaquinaModificado = new List<Dinero>() {
+                new Dinero(500.0, 17),
+                new Dinero(100.0, 30),
+                new Dinero(50.0, 50),
+                new Dinero(25.0, 25),
+            };
+            //arrange
+            var mockDineroRepository = new Mock<IDineroRepository>();
+            var dineroService = new DineroService(mockDineroRepository.Object);
+            mockDineroRepository.Setup(repo => repo.PagarVuelto(dineroEntrante)).Returns(cambioMaquinaModificado);
+
+            //act
+            var nuevoCambioMaquina = dineroService.PagarVuelto(dineroEntrante);
+
+            //assert
+            mockDineroRepository.Verify(repo => repo.PagarVuelto(dineroEntrante));
+            nuevoCambioMaquina.Where(e=>e.Denominacion == 500.0).First().Cantidad.Should().Be(17);
+        }
     }
 }
