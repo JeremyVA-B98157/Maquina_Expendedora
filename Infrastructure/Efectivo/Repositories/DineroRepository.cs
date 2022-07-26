@@ -63,5 +63,29 @@ namespace Infrastructure.Efectivo.Repositories
             }
             return monto;
         }
+
+        public IList<Dinero> ObtenerVuelto(double vuelto)
+        { 
+            IList<Dinero> dineroVuelto = CrearListaCliente();
+            if (vuelto != 0)
+            { 
+                foreach(Dinero dinero in _dbContext.Cambio)
+                {
+                    bool primerIngreso = true;
+                    while (vuelto >= dinero.Denominacion && dinero.Cantidad > 0)
+                    {
+                        if (primerIngreso)
+                        {
+                            Dinero nuevoIngreso = new Dinero(dinero.Denominacion, 0);
+                            dineroVuelto.Add(nuevoIngreso);
+                            primerIngreso = false;
+                        }
+                        dineroVuelto.Where(e => e.Denominacion == dinero.Denominacion).First().Cantidad += 1;
+                        vuelto -= dinero.Denominacion;
+                    }
+                }
+            }
+            return dineroVuelto.Where(e=>e.Cantidad > 0).ToList();
+        }
     }
 }

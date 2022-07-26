@@ -74,6 +74,8 @@
     private IList<Refresco> _refrescos;
     private IList<Dinero> _dineroCliente;
     private IList<Dinero> _cambioMaquina;
+    private IList<Dinero> _vueltoCliente;
+    private double _vuelto;
     private bool _cargando = true;
     private bool _visible;
 
@@ -117,7 +119,8 @@
 
     private bool ValidarCambioDisponible()
     {
-        if (ObtenerCambioMaquina() >= (ObtenerDineroIngresado()-ObtenerMontoTotal()))
+        _vuelto = ObtenerDineroIngresado() - ObtenerMontoTotal();
+        if (ObtenerCambioMaquina() >= _vuelto)
         {
             return true;
         }
@@ -157,6 +160,7 @@
     private void ActualizarMaquina()
     {
         _refrescos = RefrescoService.ActualizarInventario(_refrescos);
+        _vueltoCliente = DineroService.ObtenerVuelto(_vuelto);
         _cambioMaquina = DineroService.ActualizarDinero(_dineroCliente);
         _dineroCliente = DineroService.CrearListaCliente();
     }

@@ -10,5 +10,6 @@ namespace Application.Efectivo
         IList<Dinero> CrearListaCliente();
         IList<Dinero> ActualizarDinero(IList<Dinero> cambio);
         double ObtenerMontoLista(IList<Dinero> dinero);
+        IList<Dinero> ObtenerVuelto(double vuelto);
     }
 }

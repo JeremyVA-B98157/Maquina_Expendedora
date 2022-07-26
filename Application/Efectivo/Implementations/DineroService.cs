@@ -33,5 +33,10 @@ namespace Application.Efectivo.Implementations
         {
             return _dineroRepository.ObtenerMontoLista(dinero);
         }
+
+        public IList<Dinero> ObtenerVuelto(double vuelto)
+        {
+            return _dineroRepository.ObtenerVuelto(vuelto);
+        }
     }
 }
