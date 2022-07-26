@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Application.Refrescos.Implementations
 {
-    internal class RefrescoService : IRefrescoService
+    public class RefrescoService : IRefrescoService
     {
         private readonly IRefrescoRepository _refrescoRepository;
 
