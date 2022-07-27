@@ -120,7 +120,7 @@
     void CloseDialogVuelto() => _visibleVuelto = false;
     private void OpenDialogVuelto() => _visibleVuelto = true;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         _refrescos = RefrescoService.CrearInventario();
         _cambioMaquina = DineroService.CrearFondo();
