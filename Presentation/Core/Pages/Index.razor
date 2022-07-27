@@ -68,14 +68,40 @@
     </DialogActions>
 </MudDialog>
 
+<MudDialog @bind-IsVisible="_visibleVuelto" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Filled.AttachMoney" Color="@Color.Secondary" Class="mr-2"/>Su vuelto es de ₡ @_vuelto. Desglose:</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTable @ref="@_mudTableDialog" Items="@_vueltoCliente" Hover="true" Breakpoint="Breakpoint.Sm">
+            <HeaderContent>
+                <MudTh>Monto</MudTh>
+                <MudTh>Cantidad</MudTh>
+            </HeaderContent>
+        
+            <RowTemplate>
+                <MudTd DataLabel="Monto">₡ @context.Denominacion</MudTd>
+                <MudTd DataLabel="Cantidad">@context.Cantidad</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </DialogContent>
+    <DialogActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="CloseDialogVuelto" Class="px-10">Aceptar</MudButton>
+    </DialogActions>
+</MudDialog>
+
 @code{
     private MudTable<Refresco> _mudTable;
     private MudTable<Dinero> _mudTableDialog;
     private IList<Refresco> _refrescos;
     private IList<Dinero> _dineroCliente;
     private IList<Dinero> _cambioMaquina;
+    private IList<Dinero> _vueltoCliente;
+    private double _vuelto;
     private bool _cargando = true;
     private bool _visible;
+    private bool _visibleVuelto;
 
     void CloseDialog() => _visible = false;
     private DialogOptions dialogOptions = new() { FullWidth = true };
@@ -91,6 +117,8 @@
         }
     } 
 
+    void CloseDialogVuelto() => _visibleVuelto = false;
+    private void OpenDialogVuelto() => _visibleVuelto = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -117,7 +145,8 @@
 
     private bool ValidarCambioDisponible()
     {
-        if (ObtenerCambioMaquina() >= (ObtenerDineroIngresado()-ObtenerMontoTotal()))
+        _vuelto = ObtenerDineroIngresado() - ObtenerMontoTotal();
+        if (ObtenerCambioMaquina() >= _vuelto)
         {
             return true;
         }
@@ -140,7 +169,6 @@
             if (ValidarCantidadIngresada())
             {
                 ActualizarMaquina();
-                CloseDialog();
             }
             else
             {
@@ -154,10 +182,31 @@
         }
     }
 
+    private bool ValidarMontoDevuelto()
+    {
+        _vueltoCliente = DineroService.ObtenerVuelto(_vuelto);
+        if (DineroService.ObtenerMontoLista(_vueltoCliente) != _vuelto)
+        {
+            return false;
+        }
+        return true;
+    }
+
     private void ActualizarMaquina()
     {
-        _refrescos = RefrescoService.ActualizarInventario(_refrescos);
-        _cambioMaquina = DineroService.ActualizarDinero(_dineroCliente);
-        _dineroCliente = DineroService.CrearListaCliente();
+        if (ValidarMontoDevuelto())
+        {
+            _cambioMaquina = DineroService.PagarVuelto(_vueltoCliente);
+            _refrescos = RefrescoService.ActualizarInventario(_refrescos);
+            _cambioMaquina = DineroService.ActualizarDinero(_dineroCliente);
+            _dineroCliente = DineroService.CrearListaCliente();
+            CloseDialog();
+            OpenDialogVuelto();
+        }
+        else
+        {
+            Snackbar.Add("Fallo al realizar la compra", Severity.Error);
+            CloseDialog();
+        }
     }
 }
